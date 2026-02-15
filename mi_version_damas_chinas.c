@@ -52,7 +52,15 @@ void iniciar_tablero(char *tablero)
 
 void print_tablero(const char *tablero)
 {
-
+    int i,j,acomodar;
+    for (i = 0; i < 8; i++)
+    {
+        for (j= 0; j < 8; j++)
+        {
+            acomodar = i * 8 + j; //acomoda las filas y las columnas 
+            printf("| %c ",tablero[acomodar]);
+        }
+        printf("|\n");
 }
 
 void esperar_enter()
