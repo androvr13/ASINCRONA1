@@ -14,7 +14,7 @@ void inicializar(char *t){
             *(t+i*SIZE+j)='.';
 
     for(i=0;i<3;i++)
-        for(j=0,j<SIZE;j++)
+        for(j=0;j<SIZE;j++)
             if((i+j)%2==1) //hace el patrón del tablero
                 *(t+i*SIZE+j)='X';
     
@@ -38,26 +38,26 @@ void imprimir(const char *tablero){
 }
 
 int movimiento(char *t, char jugador){
-    int fil, col;
-    int nuevaFil, nuevaCol;
-    int intentos= 0;
+    int fil, col; //posición actual
+    int nuevaFil, nuevaCol; //posición destino
+    int intentos= 0; //contador de intentos para evitar bucles infinitos
 
     while(intentos<100){
-        fil=rand()%SIZE;
+        fil=rand()%SIZE; //genera fila aleatoria entre 0 y 7
         col=rand()%SIZE;
 
-    if(*(t+fil*SIZE+col)==jugador){
-        nuevaFil=(jugador=='X') ? fil+1 : fil-1;
+    if(*(t+fil*SIZE+col)==jugador){ //tablero[fil][col], verifica que la posición seleccionada tenga una ficha del jugador
+        nuevaFil=(jugador=='X') ? fil+1 : fil-1; //decide la dirección del movimiento: las fichas X avanzan hacia abajo (fil+1) y las O hacia arriba (fil-1)
 
-    if(nuevaFil>=0 && nuevaFil<SIZE){
+    if(nuevaFil>=0 && nuevaFil<SIZE){ //verifica que nunca se salga del tablero
 
 
         //LADO IZQUIERDO
-        nuevaCol=col-1;
-        if(nuevaCol>=0 && *(t+nuevaFil*SIZE+nuevaCol)=='.'){
-            *(t+nuevaFil*SIZE+nuevaCol)=jugador;
-            *(t+fil*SIZE+col)='.';
-            return 1;
+        nuevaCol=col-1; //intenta mover a la izquierda
+        if(nuevaCol>=0 && *(t+nuevaFil*SIZE+nuevaCol)=='.'){ //si está dentro del tablero y la casilla está vacía
+            *(t+nuevaFil*SIZE+nuevaCol)=jugador; //coloca la ficha en la nueva posición
+            *(t+fil*SIZE+col)='.'; //y deja un . en la posición original
+            return 1; //si se logra hacer un movimiento válido
         }
 
         //LADO DERECHO
@@ -71,22 +71,22 @@ int movimiento(char *t, char jugador){
     }
     intentos++;
     }
-    return 0;
+    return 0; //si no se logra hacer un movimiento válido después de 100 intentos
 }
 
 int main(){
     int turno;
-    char enter;
+    char enter; 
     char *ptr= &tablero[0][0];
 
-    srand(time(NULL));
+    srand(time(NULL)); //numeros aleatorios diferentes cada vez que se ejecute el programa
 
-    inicializar(ptr);
+    inicializar(ptr); 
     imprimir(ptr);
 
-    for(turno=1; turno<=10; turno++){
+    for(turno=1; turno<=10; turno++){ //10 turnos para cada jugador
         printf("\nTurno %d - X(ENTER)\n", turno);
-        while((enter=getchar()) != '\n');
+        while((enter=getchar()) != '\n'); //espera a que el usuario presione ENTER para continuar
         movimiento(ptr, 'X');
         imprimir(ptr);
 
