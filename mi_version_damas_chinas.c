@@ -71,11 +71,23 @@ void esperar_enter()
 void seleccionar_ficha(const char *tablero, char jugador)
 {
     int posicion;
+    int destino;
+    int col_origen, col_destino;
+    destino = posicion + 7;
     posicion = rand() % 64;
-    do
+    if (destino >= 0 && destino < 64)
     {
+        col_origen  = posicion % 8;
+        col_destino = destino % 8;
 
-    } while ();
+        if (abs(col_destino - col_origen) == 1)
+        {
+            if (tablero[destino] == '.')
+            {
+                
+            }
+        }
+    };
 }
 
 void mover_ficha(char *t, int pos, char jugador)
