@@ -65,12 +65,17 @@ void print_tablero(const char *tablero)
 
 void esperar_enter()
 {
-
+    getchar();
 }
 
-void seleccionar_ficha(const char *t, char jugador)
+void seleccionar_ficha(const char *tablero, char jugador)
 {
+    int posicion;
+    posicion = rand() % 64;
+    do
+    {
 
+    } while ();
 }
 
 void mover_ficha(char *t, int pos, char jugador)
