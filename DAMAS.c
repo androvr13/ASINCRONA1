@@ -76,7 +76,7 @@ int movimiento(char *t, char jugador){
 
 int main(){
     int turno;
-    char c;
+    char enter;
     char *ptr= &tablero[0][0];
 
     srand(time(NULL));
@@ -86,12 +86,12 @@ int main(){
 
     for(turno=1; turno<=10; turno++){
         printf("\nTurno %d - X(ENTER)\n", turno);
-        while((c=getchar()) != '\n');
+        while((enter=getchar()) != '\n');
         movimiento(ptr, 'X');
         imprimir(ptr);
 
         printf("\nTurno %d - O(ENTER)\n", turno);
-        while((c=getchar()) != '\n');
+        while((enter=getchar()) != '\n');
         movimiento(ptr, 'O');
         imprimir(ptr);
     }
