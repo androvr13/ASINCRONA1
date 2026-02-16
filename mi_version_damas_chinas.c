@@ -1,24 +1,31 @@
-//mi version
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
 
 void iniciar_tablero(char *tablero); //crea el tablero inicial para jugar con sus fichas y casillas respectivas
-void print_tablero(const char *tablero);
-void esperar_enter();
-void seleccionar_ficha(const char *t, char jugador);
-void mover_ficha(char *t, int pos, char jugador);
-void jugar_turno(char *t, char jugador);
+void print_tablero(const char *tablero);//muestra el tablero
+void esperar_enter(void);//espera que el usuario presione una tecla para que se haga el movimiento de X o O
+int seleccionar_ficha(const char *tablero, char jugador); //no mueve nada solo valida que la casilla este disponible para poder usarse 
+void mover_ficha(char *tablero, int posicion, char jugador);//asume que la casilla si se puede usar
 
 int main()
 {
     char tablero[64];
-    int X,O;
-    /*ejemplo para mover tablero
-    tmp = *(mat+1);
-    *(mat+1) = *(mat+2);
-    *(mat+2) = tmp;
-    */
+    int turno;
+    char jugador;
+    srand((unsigned)time(NULL));
+    iniciar_tablero(tablero);
+    print_tablero(tablero);
+    jugador = 'X';
+    for (turno = 0; turno < 20; turno++)
+    {
+        printf("\nTurno de %c\n", jugador);
+        printf("Presiona ENTER para continuar...");
+        esperar_enter();
+        mover_ficha(tablero, seleccionar_ficha(tablero, jugador), jugador);
+        print_tablero(tablero);
+        jugador = (jugador == 'X') ? 'O' : 'X';
+    }
     return 0;
 }
 
@@ -41,11 +48,19 @@ void iniciar_tablero(char *tablero)
         {
             //casilla oscura
             if (fila <= 2)
+            {
                 tablero[i] = 'X';
+            }
+
             else if (fila >= 5)
+            {
                 tablero[i] = 'O';
+            }
+               
             else
+            {
                 tablero[i] = '.';
+            }
         }
     }
 }
@@ -61,41 +76,90 @@ void print_tablero(const char *tablero)
             printf("| %c ",tablero[acomodar]);
         }
         printf("|\n");
+    }
 }
 
-void esperar_enter()
+void esperar_enter(void)
 {
-    getchar();
+    while (getchar() != '\n');
 }
 
-void seleccionar_ficha(const char *tablero, char jugador)
+int seleccionar_ficha(const char *tablero, char jugador)
 {
     int posicion;
-    int destino;
-    int col_origen, col_destino;
-    destino = posicion + 7;
-    posicion = rand() % 64;
-    if (destino >= 0 && destino < 64)
+    int fila;       
+    int columna;        
+    int casilla_final;
+    while (1)
     {
-        col_origen  = posicion % 8;
-        col_destino = destino % 8;
-
-        if (abs(col_destino - col_origen) == 1)
+        posicion = rand() % 64;//geneera un numero aleatorio de alguna casilla siguiendo esta logica
+        /* 0 1 2 3 4 5 6 7 
+           8 9 10 11 12 13 14 15 y sucesivamente
+        */
+        if (*(tablero + posicion) != jugador)
         {
-            if (tablero[destino] == '.')
+            continue;
+        }
+        fila = posicion / 8;
+        columna  = posicion % 8;
+        if (jugador == 'X')
+        {
+            casilla_final = posicion + 7;
+            if (casilla_final < 64 && columna > 0 && *(tablero + casilla_final) == '.')
             {
-                
+                 return posicion;
+            }
+
+            casilla_final = posicion + 9;
+            if (casilla_final < 64 && columna < 7 && *(tablero + casilla_final) == '.')
+            {
+                return posicion;
             }
         }
-    };
+        else
+        {
+            casilla_final= posicion - 7;
+            if (casilla_final >= 0 && columna < 7 && *(tablero + casilla_final) == '.')
+            {
+                return posicion;
+            }
+            casilla_final = posicion - 9;
+            if (casilla_final >= 0 && columna > 0 && *(tablero + casilla_final) == '.')
+            {
+                return posicion;
+            }
+        }
+    }
 }
 
-void mover_ficha(char *t, int pos, char jugador)
+void mover_ficha(char *tablero, int posicion, char jugador)
 {
+    int columna, casilla;
+    columna = posicion % 8;
+    if (jugador == 'X')
+    {
+        if (columna > 0 && *(tablero + posicion + 7) == '.')
+        {
+            casilla= posicion + 7;
+        }
+        else
+        {
+            casilla = posicion + 9;
+        }
+    }
+    else
+    {
+        if (columna < 7 && *(tablero + posicion - 7) == '.')
+        {
+            casilla= posicion - 7;
+        }
+            
+        else
+        {
+            casilla = posicion - 9;
+        }  
+    }
 
-}
-
-void jugar_turno(char *t, char jugador)
-{
-
+    *(tablero + casilla) = jugador;
+    *(tablero + posicion) = '.';
 }
